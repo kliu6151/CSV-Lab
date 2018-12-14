@@ -1,5 +1,7 @@
 package sample;
 
+import java.io.File;
+import java.util.List;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
@@ -7,43 +9,40 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.stage.Stage;
 
-
 public class Runner extends Application {
 
-    @Override public void start(Stage stage) {
-        stage.setTitle("Line Chart Sample");
-        //defining the axes
-        final NumberAxis xAxis = new NumberAxis();
-        final NumberAxis yAxis = new NumberAxis();
-        xAxis.setLabel("Number of Month");
-        //creating the chart
-        final LineChart<Number,Number> lineChart =
-                new LineChart<Number,Number>(xAxis,yAxis);
+    @Override
+    public void start(Stage stage) throws Exception {
+        stage.setTitle("Property Valuation and Assessment");
 
-        lineChart.setTitle("Stock Monitoring, 2010");
-        //defining a series
+        final NumberAxis x = new NumberAxis();
+        final NumberAxis y = new NumberAxis();
+
+        x.setLabel("LOT");
+        y.setLabel("LTDEPTH");
+
+        CSVUtilities csvHelper = new CSVUtilities(new File("2012_SAT_Results.csv"));
+
+        List<String> headers = csvHelper.getColumnHeaders();
+        List<Integer> lots = csvHelper.getDataInt(3);
+        //List<Double> ltdepth = csvHelper.getDataDouble(10);
+
+        final LineChart<Number, Number> lineChart = new LineChart<>(x, y);
+
+        lineChart.setTitle(stage.getTitle());
         XYChart.Series series = new XYChart.Series();
-        series.setName("My portfolio");
-        //populating the series with data
-        series.getData().add(new XYChart.Data(1, 23));
-        series.getData().add(new XYChart.Data(2, 14));
-        series.getData().add(new XYChart.Data(3, 15));
-        series.getData().add(new XYChart.Data(4, 24));
-        series.getData().add(new XYChart.Data(5, 34));
-        series.getData().add(new XYChart.Data(6, 36));
-        series.getData().add(new XYChart.Data(7, 22));
-        series.getData().add(new XYChart.Data(8, 45));
-        series.getData().add(new XYChart.Data(9, 43));
-        series.getData().add(new XYChart.Data(10, 17));
-        series.getData().add(new XYChart.Data(11, 29));
-        series.getData().add(new XYChart.Data(12, 25));
-
-        Scene scene  = new Scene(lineChart,800,600);
+        series.setName(stage.getTitle());
+/*
+        for (int i = 0; i < lots.size(); i++) {
+            series.getData().add(new XYChart.Data(lots.get(i), ltdepth.get(i)));
+        }
+*/
+        Scene scene = new Scene(lineChart, 800, 600);
         lineChart.getData().add(series);
-
         stage.setScene(scene);
         stage.show();
     }
+
 
     public static void main(String[] args) {
         launch(args);
